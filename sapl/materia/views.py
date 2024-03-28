@@ -1337,6 +1337,9 @@ class RelatoriaCrud(MasterDetailCrud):
 
             return {'comissao': localizacao}
 
+    class ListView(MasterDetailCrud.ListView):
+        layout_key = 'RelatoriaList'
+
     class UpdateView(MasterDetailCrud.UpdateView):
         form_class = RelatoriaForm
         layout_key = None
@@ -2129,9 +2132,6 @@ class MateriaLegislativaPesquisaView(FilterView):
 
         context['show_results'] = show_results_filter_set(qr)
 
-        context['USE_SOLR'] = settings.USE_SOLR if hasattr(
-            settings, 'USE_SOLR') else False
-
         return context
 
 
@@ -2660,9 +2660,9 @@ class EtiquetaPesquisaView(PermissionRequiredMixin, FormView):
 
         if form.cleaned_data['processo_inicial']:
             materias = materias.filter(
-                numeracao__numero_materia__gte=form.cleaned_data[
+                numero__gte=form.cleaned_data[
                     'processo_inicial'],
-                numeracao__numero_materia__lte=form.cleaned_data[
+                numero__lte=form.cleaned_data[
                     'processo_final'])
 
         context['quantidade'] = len(materias)

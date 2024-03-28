@@ -3866,7 +3866,8 @@ class PautaSessaoDetailView(DetailView):
                 'resultado_observacao': resultado_observacao,
                 'situacao': ultima_tramitacao.status if ultima_tramitacao else _("Não informada"),
                 'processo': f'{str(numeracao.numero_materia)}/{str(numeracao.ano_materia)}' if numeracao else '-',
-                'autor': [str(x.autor) for x in m.materia.autoria_set.select_related('autor').all()]
+                'autor': [str(x.autor) for x in m.materia.autoria_set.select_related('autor').all()],
+                'turno': get_turno(ultima_tramitacao.turno) if ultima_tramitacao else ''
             })
         context.update({'materia_expediente': materias_expediente})
 
@@ -3949,7 +3950,8 @@ class PautaSessaoDetailView(DetailView):
                 'resultado_observacao': resultado_observacao,
                 'situacao': ultima_tramitacao.status if ultima_tramitacao else _("Não informada"),
                 'processo': f'{str(numeracao.numero_materia)}/{str(numeracao.ano_materia)}' if numeracao else '-',
-                'autor': [str(x.autor) for x in Autoria.objects.select_related("autor").filter(materia_id=o.materia_id)]
+                'autor': [str(x.autor) for x in Autoria.objects.select_related("autor").filter(materia_id=o.materia_id)],
+                'turno': get_turno(ultima_tramitacao.turno) if ultima_tramitacao else ''
             })
 
         context.update({
@@ -3996,9 +3998,6 @@ class PesquisarSessaoPlenariaView(FilterView):
 
         context['page_range'] = make_pagination(
             page_obj.number, paginator.num_pages)
-
-        context['USE_SOLR'] = settings.USE_SOLR if hasattr(
-            settings, 'USE_SOLR') else False
 
         return context
 
